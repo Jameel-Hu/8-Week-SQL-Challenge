@@ -16,3 +16,8 @@ RIGHT JOIN runner_orders as r ON s.order_id = r.order_id
 WHERE r.cancellation is NULL
 GROUP BY customer_id,STATUS
 ORDER BY customer_id
+
+SELECT count(c.order_id) as both_exclusions_extras
+FROM customer_orders as c 
+RIGHT JOIN runner_orders as r ON c.order_id = r.order_id
+WHERE exclusions is not null and extras is not null and r.cancellation is null
