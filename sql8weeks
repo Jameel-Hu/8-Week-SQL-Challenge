@@ -54,3 +54,17 @@ LEFT JOIN ratings r2 ON c.order_id = r2.order_id
 WHERE r.cancellation is NULL
 GROUP BY customer_id , c.order_id, runner_id, rating, order_time, pickup_time, datepart( minute,pickup_time - order_time) , r.duration
 ORDER BY c.customer_id;
+
+WITH CTE AS (SELECT c.order_id,
+                    SUM(CASE WHEN pizza_name = 'Meatlovers' THEN 12
+                          ELSE 10 END) AS pizza_cost
+             FROM pizza_names p
+             JOIN customer_orders c ON p.pizza_id =c.pizza_id
+             GROUP BY c.order_id) 
+
+SELECT SUM(pizza_cost) AS revenue, 
+       SUM(distance) *0.3 as total_cost,
+       SUM(pizza_cost) - SUM(distance)*0.3 as profit
+FROM runner_orders r 
+JOIN CTE c ON R.order_id =C.order_id
+WHERE r.cancellation is NULL
