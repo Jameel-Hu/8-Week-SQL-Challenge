@@ -38,3 +38,19 @@ SELECT
                ELSE pizza_cost + 2
                 END ) AS total_earn
 FROM pizza_cte;
+SELECT customer_id , 
+        c.order_id, 
+        runner_id, 
+        rating, 
+        order_time, 
+        pickup_time, 
+        datepart( minute,pickup_time - order_time) as Time__order_pickup, 
+        r.duration, 
+        round(avg(distance/duration*60),2) as avg_Speed, 
+        COUNT(pizza_id) AS Pizza_Count
+FROM customer_orders c
+LEFT JOIN runner_orders r ON c.order_id = r.order_id 
+LEFT JOIN ratings r2 ON c.order_id = r2.order_id
+WHERE r.cancellation is NULL
+GROUP BY customer_id , c.order_id, runner_id, rating, order_time, pickup_time, datepart( minute,pickup_time - order_time) , r.duration
+ORDER BY c.customer_id;
