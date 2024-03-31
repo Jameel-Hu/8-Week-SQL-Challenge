@@ -21,3 +21,20 @@ SELECT count(c.order_id) as both_exclusions_extras
 FROM customer_orders as c 
 RIGHT JOIN runner_orders as r ON c.order_id = r.order_id
 WHERE exclusions is not null and extras is not null and r.cancellation is null
+WITH pizza_cte AS
+          (SELECT 
+                  (CASE WHEN pizza_id=1 THEN 12
+                        WHEN pizza_id = 2 THEN 10
+                        END) AS pizza_cost, 
+                  c.exclusions,
+                  c.extras
+          FROM runner_orders r
+          JOIN customer_orders c ON c.order_id = r.order_id
+          WHERE r.cancellation IS  NULL
+          )
+SELECT 
+      SUM(CASE WHEN extras IS NULL THEN pizza_cost
+               WHEN DATALENGTH(extras) = 1 THEN pizza_cost + 1
+               ELSE pizza_cost + 2
+                END ) AS total_earn
+FROM pizza_cte;
