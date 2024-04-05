@@ -7,3 +7,6 @@ SELECT
     , SUM(IF(state = 'approved', amount, 0)) AS approved_total_amount
 FROM Transactions
 GROUP BY month, country 
+
+# Write your MySQL query statement below
+select (ROUND (sum(CASE WHEN order_date=customer_pref_delivery_date THEN 1 ELSE 0 END) / count(*) , 4) * 100) as immediate_percentage from Delivery where (customer_id, order_date) in (select customer_id, min(order_date) from Delivery group by customer_id);
