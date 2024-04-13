@@ -10,3 +10,11 @@ Employees E1
 INNER JOIN Employees E2
 ON E1.employee_id =E2.reports_to
 group by E1.employee_id
+select x,y,z,
+CASE WHEN x + y > z AND
+       x + z > y AND
+       y + z > x
+  THEN 'Yes'
+  ELSE 'No'
+  END AS triangle
+from Triangle
